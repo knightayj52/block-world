@@ -80,6 +80,11 @@ function render(){let w=Math.min(innerWidth,1000),h=Math.round(w*innerHeight/inn
 function frame(now){if(now-last>32){let dt=Math.min(.04,(now-last)/1000);last=now;if(playing&&!document.querySelector('dialog[open]')){motion(dt);target=trace()}if(playing||dirty||!canvas.dataset.ready){render();canvas.dataset.ready='1';dirty=false}}requestAnimationFrame(frame)}
 addEventListener('resize',()=>dirty=true);addEventListener('keydown',e=>{if(!playing||document.querySelector('dialog[open]'))return;keys.add(e.code);if(['Space','ArrowDown','ArrowUp','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(e.repeat)return;if(e.code==='Space')jump();if(e.code==='KeyQ')action('mine');if(e.code==='KeyE')action('place');if(e.code==='Escape')menu()});addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>{keys.clear();stick=[0,0]});
 let look=null;canvas.onpointerdown=e=>{if(playing){look=[e.pointerId,e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId)}};canvas.onpointermove=e=>{if(look&&look[0]===e.pointerId){pos[3]+=(e.clientX-look[1])*.008;pos[4]=Math.max(-1.48,Math.min(1.48,pos[4]-(e.clientY-look[2])*.008));look=[e.pointerId,e.clientX,e.clientY]}};canvas.onlostpointercapture=()=>look=null;
+for (const surface of [canvas, $('hud'), document.querySelector('header')]) {
+  for (const event of ['contextmenu', 'selectstart']) {
+    surface.addEventListener(event, e => e.preventDefault());
+  }
+}
 const pad=$('pad');function steer(e){let rect=pad.getBoundingClientRect();stick=[(e.clientX-rect.left)/rect.width*2-1,(e.clientY-rect.top)/rect.height*2-1].map(v=>Math.max(-1,Math.min(1,v)))}
 pad.onpointerdown=e=>{pad.setPointerCapture(e.pointerId);steer(e)};pad.onpointermove=e=>{if(pad.hasPointerCapture(e.pointerId))steer(e)};pad.onlostpointercapture=()=>stick=[0,0];
 $('perspective').onclick=togglePerspective;
