@@ -3,3 +3,10 @@ main label,dialog label{display:block;font-size:13px;font-weight:700;margin:9px 
 #recipes{display:grid;gap:6px;margin-bottom:12px}button:disabled{opacity:.55}
 
 #perspective{position:fixed;top:62px;right:14px;font-size:13px;background:#fff8dfed}
+
+/* A held finger on the play surface stays available for movement and looking. */
+#view, #hud, #hud *, header, header * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
